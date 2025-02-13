@@ -1,20 +1,31 @@
-// DOM読み込み完了後の処理
-document.addEventListener("DOMContentLoaded", function() {
-  // 言語切替のデモ処理
-  const langLinks = document.querySelectorAll('.language a');
-  langLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const lang = this.textContent;
-      alert(lang + " language selected. (デモ)");
-      // 実際の言語切替処理を実装する場合はここに記述
-    });
+// DOM読み込み完了後に実行
+document.addEventListener('DOMContentLoaded', function() {
+  // ハンバーガーメニューのトグル処理
+  const hamburger = document.querySelector('.hamburger');
+  const nav = document.querySelector('.nav');
+
+  hamburger.addEventListener('click', function() {
+    nav.classList.toggle('active');
+    hamburger.classList.toggle('active');
   });
 
-  // ヒーローテキストのフェードイン（スクロール時などの演出が必要ならIntersectionObserver等で実装）
-  const fadeElements = document.querySelectorAll('.fade-in');
-  fadeElements.forEach(el => {
-    // ページ読み込み後、アニメーションをトリガー
-    el.style.opacity = 1;
+  // スクロール時にフェードインアニメーションを適用（IntersectionObserver利用）
+  const animateElements = document.querySelectorAll('.animate-on-scroll');
+
+  const observerOptions = {
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  animateElements.forEach(el => {
+    observer.observe(el);
   });
 });
